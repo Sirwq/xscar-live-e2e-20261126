@@ -1,0 +1,26 @@
+name: Verify pinned revision
+on:
+  push:
+    branches: [main, incoming-sample]
+permissions:
+  contents: read
+jobs:
+  sample:
+    name: ${{ matrix.name }}
+    strategy:
+      matrix:
+        include:
+          - { name: sample-macos, os: macos-15 }
+          - { name: sample-windows, os: windows-2022 }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Run sample tests
+        shell: python
+        run: |
+          import subprocess
+          import sys
+          subprocess.run([sys.executable, "-m", "unittest", "-v"], check=True)
