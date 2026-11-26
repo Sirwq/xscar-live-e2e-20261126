@@ -1,0 +1,21 @@
+name: CPU unit tests
+
+on:
+  push:
+    branches:
+      - 'xsc-cpu-run/**'
+
+permissions:
+  contents: read
+
+jobs:
+  cpu:
+    name: CPU unit tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - run: python3 -m unittest -v
